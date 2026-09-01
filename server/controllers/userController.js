@@ -11,6 +11,14 @@ const registerUser = async (req, res)=>{
         if(!name || !email || !password){
             return res.json({success:false, message: 'Missing Details'})
         }
+const existingUser = await userModel.findOne({ email });
+
+        if (existingUser) {
+            return res.json({
+                success: false,
+                message: 'User already exists. Please login.'
+            });
+        }
 
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
